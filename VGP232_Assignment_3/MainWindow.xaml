@@ -3,41 +3,56 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VGP232_Assignment_3"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:VGP232_Assignment_3" d:DataContext="{d:DesignInstance Type=local:SpriteList}"
+        
+mc:Ignorable="d"
         Background="DarkGray"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="239" Width="489"
+        DataContext=""
+        >
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header ="New"></MenuItem>
+                    <MenuItem Header ="Open.."></MenuItem>
+                    <MenuItem Header ="Save As.."></MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Header ="Exit"></MenuItem>
+
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <StackPanel Margin="10" Orientation="Vertical">
             <TextBlock>
-                
+
             </TextBlock>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>
+                <TextBlock Margin="0,0,5,0">
                     Output Directory
                 </TextBlock>
-                <TextBox>
-                    
+                <TextBox Name="Output_Text" Margin="0,0,10,0" Width="300" TextChanged="Ouput">
+
                 </TextBox>
-                <Button>
+                <Button Click="Browse_Clicked">
                     Browse...
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock>
+            <StackPanel Margin="0,10" Orientation="Horizontal">
+                <TextBlock Width="90" Margin="0,0,5,0">
                     Filename (.png)
                 </TextBlock>
-                <TextBox>
+                <TextBox Width="300">
 
                 </TextBox>
             </StackPanel>
-            <StackPanel>
+            <StackPanel Margin="0,0,0,10">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>
+                    <TextBlock Margin="0,0,5,0" Width="90">
                         Columns
                     </TextBlock>
-                    <TextBox>
-                        
+                    <TextBox Margin="0,0,5,0" Width="145">
+
                     </TextBox>
                     <CheckBox>
                         include meta data (.json)
@@ -45,28 +60,33 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <ListBox Width="200">
+                <ListBox Name="Image_List" Margin="0,0,5,0"  Width="395" Height="100">
                     <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
+                        <ItemsPanelTemplate >
                             <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding}" Width="40" Height="40" Margin="10"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
                 </ListBox>
                 <StackPanel Orientation="Vertical">
-                    <Button>Add</Button>
-                    <Button>Remove</Button>
+                    <Button Margin="0,0,0,20" Click="Add_Clicked">Add</Button>
+                    <Button Margin="0,0,0,20">Remove</Button>
                     <Button>Generate</Button>
 
                 </StackPanel>
             </StackPanel>
-            
-            
+
+
         </StackPanel>
-        
-        
-        
-        
-        
+
+
+
+
+
 
     </Grid>
 </Window>
