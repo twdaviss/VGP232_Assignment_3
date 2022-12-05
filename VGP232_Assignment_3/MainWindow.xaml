@@ -1,0 +1,72 @@
+﻿<Window x:Class="VGP232_Assignment_3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VGP232_Assignment_3"
+        mc:Ignorable="d"
+        Background="DarkGray"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <TextBlock>
+                
+            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                    Output Directory
+                </TextBlock>
+                <TextBox>
+                    
+                </TextBox>
+                <Button>
+                    Browse...
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                    Filename (.png)
+                </TextBlock>
+                <TextBox>
+
+                </TextBox>
+            </StackPanel>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>
+                        Columns
+                    </TextBlock>
+                    <TextBox>
+                        
+                    </TextBox>
+                    <CheckBox>
+                        include meta data (.json)
+                    </CheckBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ListBox Width="200">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <StackPanel Orientation="Vertical">
+                    <Button>Add</Button>
+                    <Button>Remove</Button>
+                    <Button>Generate</Button>
+
+                </StackPanel>
+            </StackPanel>
+            
+            
+        </StackPanel>
+        
+        
+        
+        
+        
+
+    </Grid>
+</Window>
