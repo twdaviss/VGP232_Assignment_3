@@ -112,7 +112,7 @@ namespace VGP232_Assignment_3
         private void Exit_Button_Clicked(object sender, RoutedEventArgs e)
         {
             string messageBoxText = "Are you sure you want to exit? If so, do you want to save changes?";
-            string caption = "Word Processor";
+            string caption = "Exit Application";
             MessageBoxButton button = MessageBoxButton.YesNoCancel;
             MessageBoxImage icon = MessageBoxImage.Warning;
             MessageBoxResult result;
@@ -145,7 +145,7 @@ namespace VGP232_Assignment_3
         private void New_Button_Clicked(object sender, RoutedEventArgs e)
         {
             string messageBoxText = "Are you sure you want to start over?\nChanges will be lost.\nIf yes, do you want to save changes first?";
-            string caption = "Word Processor";
+            string caption = "New Data";
             MessageBoxButton button = MessageBoxButton.YesNoCancel;
             MessageBoxImage icon = MessageBoxImage.Warning;
             MessageBoxResult result;

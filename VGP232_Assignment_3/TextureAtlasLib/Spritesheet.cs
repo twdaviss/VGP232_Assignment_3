@@ -101,27 +101,59 @@ namespace TextureAtlasLib
             }
 
         }
-        private static void Validate()
+        private static bool Validate()
         {
+            string messageBoxText = "";
+            int errors = 0;
             if (InputPaths == null || InputPaths.Count == 0)
             {
-                throw new Exception("The input path cannot be empty");
+                messageBoxText = messageBoxText + "The input path cannot be empty.\n";
+                errors++;
+                //throw new Exception("The input path cannot be empty");
             }
 
             if (string.IsNullOrEmpty(OutputFile))
             {
-                throw new Exception("The output file cannot be empty");
+                messageBoxText = messageBoxText + "The output file cannot be empty.\n";
+                errors++;
+                //throw new Exception("The output file cannot be empty");
             }
 
             if (string.IsNullOrEmpty(OutputDirectory))
             {
-                throw new Exception("The output directory cannot be empty");
+                messageBoxText = messageBoxText + "The output directory cannot be empty.\n";
+                errors++;
+                //throw new Exception("The output directory cannot be empty");
             }
-
-            if (Columns < 1)
+            if (errors != 0)
             {
-                throw new Exception("Column size must be at least 1");
+                string errorsWarning;
+                if (errors == 1)
+                {
+                    errorsWarning = "Your entries has " + errors + " error.\n";
+
+                }
+                else
+                {
+                    errorsWarning = "Your entries have " + errors + " errors.\n";
+                }
+                string caption = "Errors Detected";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+                MessageBox.Show(errorsWarning + messageBoxText, caption, button, icon);
+                return false;
             }
+            //if (Columns < 1) obsolete
+            //{
+            //    string messageBoxText = "\"The input path cannot be empty\"";
+            //    string caption = "Word Processor";
+            //    MessageBoxButton button = MessageBoxButton.OK;
+            //    MessageBoxImage icon = MessageBoxImage.Warning;
+            //    MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+            //    return false;
+            //    //throw new Exception("Column size must be at least 1");
+            //}
+            return true;
         }
 
         /// <summary>
@@ -131,111 +163,113 @@ namespace TextureAtlasLib
         /// 
         public static void Generate(bool overwrite)
         {
-            Validate();
-
-            string outputPath = Path.Combine(OutputDirectory, OutputFile);
-
-            if (File.Exists(outputPath))
+            if (Validate() == true)
             {
-                if (overwrite)
-                {
-                    File.Delete(outputPath);
-                }
-                else
-                {
-                    throw new Exception("The output file already exists.");
-                }
-            }
 
-            // The original Logic was from: https://forum.unity.com/threads/quick-and-dirty-c-sprite-sheet-generator.436802/
-            // Retrieve the png input files in the Input Path specified.
-            // string[] files = Directory.GetFiles(InputPath, "*.png");
-            int fileCount = InputPaths.Count;
-            if (fileCount > 0)
-            {
-                // Determines the largest sprite and use that as the cell size.
-                int maxWidth = 0;
-                int maxHeight = 0;
-                foreach (string f in InputPaths)
+                string outputPath = Path.Combine(OutputDirectory, OutputFile);
+
+                if (File.Exists(outputPath))
                 {
-                    Image img = Image.FromFile(f);
-                    maxWidth = Math.Max(maxWidth, img.Width);
-                    maxHeight = Math.Max(maxHeight, img.Height);
-                    img.Dispose();
-                }
-
-                if (fileCount < Columns)
-                {
-                    // Single row, reducing column count to match file count.
-                    Columns = fileCount;
-                }
-
-                int width = Columns * maxWidth;
-                int rows = (fileCount / Columns) + ((fileCount % Columns > 0) ? 1 : 0);
-                int height = rows * maxHeight;
-
-                // Console.WriteLine("Output: {0} rows, {1} cols, {2} x {3} resolution.", rows, Columns, width, height);
-
-                List<SpriteInfo> spriteInfos = new List<SpriteInfo>();
-                Bitmap sheet = new Bitmap(width, height);
-                using (Graphics gfx = Graphics.FromImage(sheet))
-                {
-                    int col = 0;
-                    int row = 0;
-                    foreach (string f in InputPaths)
+                    if (overwrite)
                     {
-                        // Sprite Info intialization
-                        SpriteInfo sprite = new SpriteInfo();
-                        sprite.Name = System.IO.Path.GetFileNameWithoutExtension(f);
-
-                        Image img = Image.FromFile(f);
-
-                        int x = (col * maxWidth) + (maxWidth / 2 - img.Width / 2);
-                        int y = (row * maxHeight) + (maxHeight / 2 - img.Height / 2);
-
-                        Rectangle srcRect = new Rectangle(0, 0, img.Width, img.Height);
-                        Rectangle destRect = new Rectangle(x, y, img.Width, img.Height);
-
-                        // Populate the coordinates for the sprite.
-                        sprite.Left = x;
-                        sprite.Top = y;
-                        sprite.Right = x + img.Width;
-                        sprite.Bottom = y + img.Height;
-
-                        gfx.DrawImage(img, destRect, srcRect, GraphicsUnit.Pixel);
-
-                        img.Dispose();
-
-                        col++;
-                        if (col == Columns)
-                        {
-                            col = 0;
-                            row++;
-                        }
+                        File.Delete(outputPath);
+                    }
+                    else
+                    {
+                        throw new Exception("The output file already exists.");
                     }
                 }
 
-                if (IncludeMetaData)
+                // The original Logic was from: https://forum.unity.com/threads/quick-and-dirty-c-sprite-sheet-generator.436802/
+                // Retrieve the png input files in the Input Path specified.
+                // string[] files = Directory.GetFiles(InputPath, "*.png");
+                int fileCount = InputPaths.Count;
+                if (fileCount > 0)
                 {
-                    string exportedMetaData = Path.GetFileNameWithoutExtension(outputPath) + ".json";
-                    string json = JsonSerializer.Serialize<List<SpriteInfo>>(spriteInfos);
-                    File.WriteAllText(exportedMetaData, json);
-                }
+                    // Determines the largest sprite and use that as the cell size.
+                    int maxWidth = 0;
+                    int maxHeight = 0;
+                    foreach (string f in InputPaths)
+                    {
+                        Image img = Image.FromFile(f);
+                        maxWidth = Math.Max(maxWidth, img.Width);
+                        maxHeight = Math.Max(maxHeight, img.Height);
+                        img.Dispose();
+                    }
 
-                sheet.Save(outputPath);
-                string messageBoxText = "Sheet Successfully Generated. Would you like to view output?";
-                string caption = "Word Processor";
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Information;
-                MessageBoxResult result;
-                result = MessageBox.Show(messageBoxText, caption, button, icon);
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
-                        Process.Start("explorer.exe",@OutputDirectory);
-                        break;
-                    case MessageBoxResult.No:
-                        break;
+                    if (fileCount < Columns)
+                    {
+                        // Single row, reducing column count to match file count.
+                        Columns = fileCount;
+                    }
+
+                    int width = Columns * maxWidth;
+                    int rows = (fileCount / Columns) + ((fileCount % Columns > 0) ? 1 : 0);
+                    int height = rows * maxHeight;
+
+                    // Console.WriteLine("Output: {0} rows, {1} cols, {2} x {3} resolution.", rows, Columns, width, height);
+
+                    List<SpriteInfo> spriteInfos = new List<SpriteInfo>();
+                    Bitmap sheet = new Bitmap(width, height);
+                    using (Graphics gfx = Graphics.FromImage(sheet))
+                    {
+                        int col = 0;
+                        int row = 0;
+                        foreach (string f in InputPaths)
+                        {
+                            // Sprite Info intialization
+                            SpriteInfo sprite = new SpriteInfo();
+                            sprite.Name = System.IO.Path.GetFileNameWithoutExtension(f);
+
+                            Image img = Image.FromFile(f);
+
+                            int x = (col * maxWidth) + (maxWidth / 2 - img.Width / 2);
+                            int y = (row * maxHeight) + (maxHeight / 2 - img.Height / 2);
+
+                            Rectangle srcRect = new Rectangle(0, 0, img.Width, img.Height);
+                            Rectangle destRect = new Rectangle(x, y, img.Width, img.Height);
+
+                            // Populate the coordinates for the sprite.
+                            sprite.Left = x;
+                            sprite.Top = y;
+                            sprite.Right = x + img.Width;
+                            sprite.Bottom = y + img.Height;
+
+                            gfx.DrawImage(img, destRect, srcRect, GraphicsUnit.Pixel);
+
+                            img.Dispose();
+
+                            col++;
+                            if (col == Columns)
+                            {
+                                col = 0;
+                                row++;
+                            }
+                        }
+                    }
+
+                    if (IncludeMetaData)
+                    {
+                        string exportedMetaData = Path.GetFileNameWithoutExtension(outputPath) + ".json";
+                        string json = JsonSerializer.Serialize<List<SpriteInfo>>(spriteInfos);
+                        File.WriteAllText(exportedMetaData, json);
+                    }
+
+                    sheet.Save(outputPath);
+                    string messageBoxText = "Sheet Successfully Generated. Would you like to view output?";
+                    string caption = "Sheet Generator";
+                    MessageBoxButton button = MessageBoxButton.YesNo;
+                    MessageBoxImage icon = MessageBoxImage.Information;
+                    MessageBoxResult result;
+                    result = MessageBox.Show(messageBoxText, caption, button, icon);
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            Process.Start("explorer.exe", @OutputDirectory);
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                    }
                 }
             }
         }
@@ -255,7 +289,7 @@ namespace TextureAtlasLib
                     xs.Serialize(fs, dummy);
                     fs.Close();
                     string messageBoxText = "Save Successful";
-                    string caption = "Word Processor";
+                    string caption = "Save File";
                     MessageBoxButton button = MessageBoxButton.OK;
                     MessageBoxImage icon = MessageBoxImage.Information;
                     MessageBox.Show(messageBoxText, caption, button, icon);
@@ -272,7 +306,7 @@ namespace TextureAtlasLib
                 xs.Serialize(fs, dummy);
                 fs.Close();
                 string messageBoxText = "Save Successful";
-                string caption = "Word Processor";
+                string caption = "Save File";
                 MessageBoxButton button = MessageBoxButton.OK;
                 MessageBoxImage icon = MessageBoxImage.Information;
                 MessageBox.Show(messageBoxText, caption, button, icon);
@@ -304,7 +338,7 @@ namespace TextureAtlasLib
             Images.Clear();
             NotifyStaticPropertyChanged();
             string messageBoxText = "All Fields Have Been Reset";
-            string caption = "Word Processor";
+            string caption = "Reset Data Fields";
             MessageBoxButton button = MessageBoxButton.OK;
             MessageBoxImage icon = MessageBoxImage.Information;
             MessageBox.Show(messageBoxText, caption, button, icon);
