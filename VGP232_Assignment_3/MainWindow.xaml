@@ -3,22 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VGP232_Assignment_3" d:DataContext="{d:DesignInstance Type=local:SpriteList}"
+        xmlns:local="clr-namespace:TextureAtlasLib" d:DataContext="{d:DesignInstance Type=local:Spritesheet}"
         
 mc:Ignorable="d"
         Background="DarkGray"
-        Title="MainWindow" Height="239" Width="489"
+        Title="MainWindow" Height="274" Width="489"
         DataContext=""
         >
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
-                    <MenuItem Header ="New"></MenuItem>
-                    <MenuItem Header ="Open.."></MenuItem>
-                    <MenuItem Header ="Save As.."></MenuItem>
+                    <MenuItem Header ="New" Click="New_Button_Clicked"></MenuItem>
+                    <MenuItem Header ="Open.." Click="Open_Button_Clicked"></MenuItem>
+                    <MenuItem Name="Save_Button" Header ="Save" IsEnabled="false" Click="Save_Button_Clicked"></MenuItem>
+                    <MenuItem Header ="Save As.." Click="Save_As_Button_Clicked"></MenuItem>
                     <Separator></Separator>
-                    <MenuItem Header ="Exit"></MenuItem>
+                    <MenuItem Header ="Exit" Click="Exit_Button_Clicked"></MenuItem>
 
                 </MenuItem>
             </Menu>
@@ -31,7 +32,7 @@ mc:Ignorable="d"
                 <TextBlock Margin="0,0,5,0">
                     Output Directory
                 </TextBlock>
-                <TextBox Name="Output_Text" Margin="0,0,10,0" Width="300" TextChanged="Ouput">
+                <TextBox Text="{Binding Path=OutputDirectory,Mode=TwoWay}" Name="Output_Text" Margin="0,0,10,0" Width="300" TextChanged="Ouput" LostFocus="Update_Directory">
 
                 </TextBox>
                 <Button Click="Browse_Clicked">
@@ -42,7 +43,7 @@ mc:Ignorable="d"
                 <TextBlock Width="90" Margin="0,0,5,0">
                     Filename (.png)
                 </TextBlock>
-                <TextBox Width="300">
+                <TextBox Text="{Binding Path=OutputFile, Mode=TwoWay}" Name="Filename_Text" Width="300" LostFocus="Update_File">
 
                 </TextBox>
             </StackPanel>
@@ -51,16 +52,15 @@ mc:Ignorable="d"
                     <TextBlock Margin="0,0,5,0" Width="90">
                         Columns
                     </TextBlock>
-                    <TextBox Margin="0,0,5,0" Width="145">
-
+                    <TextBox Name="Columns_Text" Margin="0,0,5,0" Width="145" TextChanged="Columns_Text_Changed" Text="{Binding Path = Columns, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LostFocus="Columns_Text_LostFocus">
                     </TextBox>
-                    <CheckBox>
+                    <CheckBox Name="MetaBox" Checked="MetaBox_Checked" IsChecked="{Binding Path=IncludeMetaData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         include meta data (.json)
                     </CheckBox>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <ListBox Name="Image_List" Margin="0,0,5,0"  Width="395" Height="100">
+                <ListBox ItemsSource="{Binding Path=Images}" ScrollViewer.HorizontalScrollBarVisibility="Auto" Name="Image_List" Margin="0,0,5,0"  Width="395" Height="100">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate >
                             <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -74,8 +74,8 @@ mc:Ignorable="d"
                 </ListBox>
                 <StackPanel Orientation="Vertical">
                     <Button Margin="0,0,0,20" Click="Add_Clicked">Add</Button>
-                    <Button Margin="0,0,0,20">Remove</Button>
-                    <Button>Generate</Button>
+                    <Button Margin="0,0,0,20" Click="Remove_Button_Clicked">Remove</Button>
+                    <Button Name="Generate_Button" Click="Generate_Button_Clicked">Generate</Button>
 
                 </StackPanel>
             </StackPanel>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DummyClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <_dcolumns>2</_dcolumns>
+  <_dincludeMetaData>false</_dincludeMetaData>
+  <_dimages>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_action1.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_action2.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_back.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_cheer1.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_cheer2.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_climb1.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_climb2.png</string>
+    <string>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player\player_duck.png</string>
+  </_dimages>
+  <dOutputFile>out.png</dOutputFile>
+  <dOutputDirectory>C:\Dev\VGP232_Assignment_3\VGP232_Assignment_3\Player</dOutputDirectory>
+</DummyClass>
